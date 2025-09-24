@@ -21,3 +21,10 @@ Nosso objetivo é que o site ajude a evitar esse tipo de problema em futuras eme
 - **HTML5** e **CSS3**: para estrutura e estilização das páginas.
 - **Canva**: design de elementos gráficos.
 - **Neon Tech**: planejado para o gerenciamento do banco de dados.
+  
+## Nossa equipe
+- Alice Bezerra
+- Gabriel Muniz
+- Leticia Gazeta
+- Thaila Bertozz
+- Thiago Barbudo

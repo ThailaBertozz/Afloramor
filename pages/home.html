@@ -6,50 +6,94 @@
   <title>Painel Gerencial - Afloramor</title>
   <link rel="stylesheet" href="../css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     body {
-      background-color: #fefcfd;
-      font-family: 'Poppins', sans-serif;
+      display: flex;
       margin: 0;
-      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #fefcfd;
     }
 
-    header {
+    /* Sidebar compacta */
+    .sidebar {
+      width: 80px;
       background-color: #e67e9c;
       color: white;
-      padding: 15px 30px;
+      height: 100vh;
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
       align-items: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      position: fixed;
+      left: 0;
+      top: 0;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
     }
 
-    .logo {
-      font-size: 22px;
+    .sidebar .logo {
+      font-size: 24px;
       font-weight: bold;
+      padding: 20px 0;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 30px;
+      flex: 1;
       display: flex;
+      flex-direction: column;
+      gap: 25px;
       align-items: center;
-      gap: 10px;
+    }
+
+    .sidebar ul li {
+      cursor: pointer;
+      transition: 0.3s;
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .sidebar ul li:hover {
+      background-color: #f4b6c2;
+    }
+
+    .sidebar ul li.active {
+      background-color: #ffe3eb;
+      color: #e67e9c;
+    }
+
+    .sidebar svg {
+      width: 24px;
+      height: 24px;
+      stroke: white;
+    }
+
+    .sidebar ul li.active svg {
+      stroke: #e67e9c;
     }
 
     .logout {
+      margin: 20px 0;
       background: white;
       color: #e67e9c;
       border: none;
-      padding: 8px 14px;
-      border-radius: 6px;
+      padding: 10px;
+      border-radius: 8px;
       cursor: pointer;
-      font-weight: 500;
       transition: 0.3s;
-    }
-    .logout:hover {
-      background: #ffe3eb;
+      font-weight: 500;
     }
 
-    .container {
+    .logout:hover {
+      background-color: #ffe3eb;
+    }
+
+    /* Conteúdo principal */
+    .main {
+      margin-left: 80px;
       padding: 30px;
-      max-width: 1200px;
-      margin: auto;
+      width: calc(100% - 80px);
     }
 
     h2 {
@@ -140,82 +184,95 @@
     tr:nth-child(even) {
       background-color: #f9f9f9;
     }
+
+    .section { display: none; }
+    .section.active { display: block; }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">🌸 Afloramor ADM</div>
-    <button class="logout" onclick="logout()">Sair</button>
-  </header>
+  <div class="sidebar">
+    <div class="logo">🌸</div>
+    <ul>
+      <li class="active" onclick="showSection('dashboard', this)"><i data-lucide="bar-chart-3"></i></li>
+      <li onclick="showSection('usuarios', this)"><i data-lucide="user-plus"></i></li>
+      <li onclick="showSection('relatorios', this)"><i data-lucide="file-text"></i></li>
+      <li onclick="showSection('config', this)"><i data-lucide="settings"></i></li>
+    </ul>
+    <button class="logout" onclick="logout()"><i data-lucide="log-out"></i></button>
+  </div>
 
-  <div class="container">
-    <h2>Painel Gerencial</h2>
+  <div class="main">
+    <div id="dashboard" class="section active">
+      <h2>Painel Gerencial</h2>
+      <div class="filters">
+        <input type="text" id="searchInput" placeholder="Buscar doador...">
+        <select id="monthFilter">
+          <option value="">Todos os meses</option>
+          <option value="Jan">Janeiro</option>
+          <option value="Fev">Fevereiro</option>
+          <option value="Mar">Março</option>
+          <option value="Abr">Abril</option>
+          <option value="Mai">Maio</option>
+          <option value="Jun">Junho</option>
+          <option value="Jul">Julho</option>
+          <option value="Ago">Agosto</option>
+          <option value="Set">Setembro</option>
+          <option value="Out">Outubro</option>
+          <option value="Nov">Novembro</option>
+          <option value="Dez">Dezembro</option>
+        </select>
+      </div>
 
-    <div class="filters">
-      <input type="text" id="searchInput" placeholder="Buscar doador...">
-      <select id="monthFilter">
-        <option value="">Todos os meses</option>
-        <option value="Jan">Janeiro</option>
-        <option value="Fev">Fevereiro</option>
-        <option value="Mar">Março</option>
-        <option value="Abr">Abril</option>
-        <option value="Mai">Maio</option>
-        <option value="Jun">Junho</option>
-        <option value="Jul">Julho</option>
-        <option value="Ago">Agosto</option>
-        <option value="Set">Setembro</option>
-        <option value="Out">Outubro</option>
-        <option value="Nov">Novembro</option>
-        <option value="Dez">Dezembro</option>
-      </select>
+      <div class="dashboard-cards">
+        <div class="card"><h3>Total de Doações</h3><p>R$ 8.540</p></div>
+        <div class="card"><h3>Meta Mensal</h3><p>R$ 10.000</p></div>
+        <div class="card"><h3>Voluntários Ativos</h3><p>23</p></div>
+        <div class="card"><h3>Projetos Apoiados</h3><p>7</p></div>
+      </div>
+
+      <div class="chart-grid">
+        <div class="chart-container"><h3>Doações por Mês</h3><canvas id="donationChart"></canvas></div>
+        <div class="chart-container"><h3>Distribuição de Métodos</h3><canvas id="methodChart"></canvas></div>
+      </div>
+
+      <h3>Últimas Doações</h3>
+      <table>
+        <thead><tr><th>Nome</th><th>Valor</th><th>Data</th><th>Método</th></tr></thead>
+        <tbody id="donationTable"></tbody>
+      </table>
     </div>
 
-    <div class="dashboard-cards">
-      <div class="card">
-        <h3>Total de Doações</h3>
-        <p id="totalDonations">R$ 8.540</p>
-      </div>
-      <div class="card">
-        <h3>Meta Mensal</h3>
-        <p>R$ 10.000</p>
-      </div>
-      <div class="card">
-        <h3>Voluntários Ativos</h3>
-        <p>23</p>
-      </div>
-      <div class="card">
-        <h3>Projetos Apoiados</h3>
-        <p>7</p>
-      </div>
+    <div id="usuarios" class="section">
+      <h2>Cadastro de Usuários</h2>
+      <form style="background:white;padding:20px;border-radius:12px;max-width:500px;">
+        <label>Nome:</label><br>
+        <input type="text" placeholder="Digite o nome" style="width:100%;padding:10px;margin-bottom:10px;"><br>
+        <label>Email:</label><br>
+        <input type="email" placeholder="Digite o email" style="width:100%;padding:10px;margin-bottom:10px;"><br>
+        <label>Função:</label><br>
+        <select style="width:100%;padding:10px;margin-bottom:10px;">
+          <option>Administrador</option>
+          <option>Voluntário</option>
+          <option>Parceiro</option>
+        </select><br>
+        <button type="button" style="background:#e67e9c;color:white;padding:10px 20px;border:none;border-radius:8px;cursor:pointer;">Cadastrar</button>
+      </form>
     </div>
 
-    <div class="chart-grid">
-      <div class="chart-container">
-        <h3>Doações por Mês</h3>
-        <canvas id="donationChart"></canvas>
-      </div>
-      <div class="chart-container">
-        <h3>Distribuição de Métodos</h3>
-        <canvas id="methodChart"></canvas>
-      </div>
+    <div id="relatorios" class="section">
+      <h2>Relatórios</h2>
+      <p>Gere relatórios personalizados sobre as doações e atividades do projeto. (Em desenvolvimento)</p>
     </div>
 
-    <h3>Últimas Doações</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>Valor</th>
-          <th>Data</th>
-          <th>Método</th>
-        </tr>
-      </thead>
-      <tbody id="donationTable"></tbody>
-    </table>
+    <div id="config" class="section">
+      <h2>Configurações</h2>
+      <p>Personalize permissões e informações institucionais. (Em desenvolvimento)</p>
+    </div>
   </div>
 
   <script>
-    // Mock data
+    lucide.createIcons();
+
     const donations = [
       { nome: "Maria Silva", valor: 120, data: "03/11/2025", metodo: "Pix", mes: "Nov" },
       { nome: "João Pedro", valor: 250, data: "02/11/2025", metodo: "Cartão", mes: "Nov" },
@@ -226,59 +283,14 @@
       { nome: "Rafael Dias", valor: 60, data: "10/08/2025", metodo: "Pix", mes: "Ago" }
     ];
 
-    // Chart.js - Doações por Mês
-    const donationChart = new Chart(document.getElementById('donationChart'), {
-      type: 'bar',
-      data: {
-        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-        datasets: [{
-          label: 'Doações (R$)',
-          data: [800, 950, 1200, 1100, 1300, 1000, 900, 1250, 1500, 1600, 900, 800],
-          backgroundColor: '#e67e9c'
-        }]
-      },
-      options: {
-        scales: {
-          y: { beginAtZero: true }
-        }
-      }
-    });
-
-    // Chart.js - Distribuição de Métodos
-    const methodData = {
-      Pix: donations.filter(d => d.metodo === 'Pix').length,
-      Cartão: donations.filter(d => d.metodo === 'Cartão').length,
-      Boleto: donations.filter(d => d.metodo === 'Boleto').length,
-    };
-
-    new Chart(document.getElementById('methodChart'), {
-      type: 'doughnut',
-      data: {
-        labels: Object.keys(methodData),
-        datasets: [{
-          data: Object.values(methodData),
-          backgroundColor: ['#e67e9c', '#f4b6c2', '#ffe3eb']
-        }]
-      },
-      options: {
-        plugins: {
-          legend: { position: 'bottom' }
-        }
-      }
-    });
-
-    // Render tabela com filtros
-    const tableBody = document.getElementById('donationTable');
-    const searchInput = document.getElementById('searchInput');
-    const monthFilter = document.getElementById('monthFilter');
-
     function renderTable() {
+      const tableBody = document.getElementById('donationTable');
+      const searchInput = document.getElementById('searchInput');
+      const monthFilter = document.getElementById('monthFilter');
       const term = searchInput.value.toLowerCase();
       const month = monthFilter.value;
       tableBody.innerHTML = '';
-
-      donations
-        .filter(d => d.nome.toLowerCase().includes(term) && (month === '' || d.mes === month))
+      donations.filter(d => d.nome.toLowerCase().includes(term) && (month === '' || d.mes === month))
         .forEach(d => {
           const row = document.createElement('tr');
           row.innerHTML = `<td>${d.nome}</td><td>R$ ${d.valor.toFixed(2)}</td><td>${d.data}</td><td>${d.metodo}</td>`;
@@ -286,14 +298,29 @@
         });
     }
 
-    searchInput.addEventListener('input', renderTable);
-    monthFilter.addEventListener('change', renderTable);
-
+    document.getElementById('searchInput').addEventListener('input', renderTable);
+    document.getElementById('monthFilter').addEventListener('change', renderTable);
     renderTable();
 
+    new Chart(document.getElementById('donationChart'), {
+      type: 'bar',
+      data: { labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'], datasets: [{ label: 'Doações (R$)', data: [800, 950, 1200, 1100, 1300, 1000, 900, 1250, 1500, 1600, 900, 800], backgroundColor: '#e67e9c' }]},
+      options: { scales: { y: { beginAtZero: true } } }
+    });
+
+    const methodData = { Pix: donations.filter(d => d.metodo === 'Pix').length, Cartão: donations.filter(d => d.metodo === 'Cartão').length, Boleto: donations.filter(d => d.metodo === 'Boleto').length };
+    new Chart(document.getElementById('methodChart'), { type: 'doughnut', data: { labels: Object.keys(methodData), datasets: [{ data: Object.values(methodData), backgroundColor: ['#e67e9c', '#f4b6c2', '#ffe3eb'] }] }, options: { plugins: { legend: { position: 'bottom' } } } });
+
+    function showSection(sectionId, element) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById(sectionId).classList.add('active');
+      document.querySelectorAll('.sidebar ul li').forEach(li => li.classList.remove('active'));
+      element.classList.add('active');
+    }
+
     function logout() {
-      alert("Logout realizado com sucesso!");
-      window.location.href = "login.html";
+      alert('Logout realizado com sucesso!');
+      window.location.href = 'login.html';
     }
   </script>
 </body>

@@ -1,1 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastro — Afloramor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <a href="index.html" class="logo">AFLORAMOR</a>
+      </div>
+      <nav class="main-nav">
+        <a href="doe-agora.html" class="btn btn-doar">Doe Agora</a>
+        <a href="como-doar.html">Como doar?</a>
+        <a href="login.html" class="btn">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="display:flex;justify-content:center;padding:40px 0">
+    <div class="card" style="width:520px">
+      <h2 style="text-align:center;color:var(--accent);margin-top:0">Criar conta</h2>
+      <form onsubmit="event.preventDefault();alert('Simulação: conta criada')">
+        <label for="nome">Nome completo</label>
+        <input id="nome" type="text" required>
+
+        <label for="cpf">CPF</label>
+        <input id="cpf" type="text" placeholder="000.000.000-00">
+
+        <label for="emailCad">E-mail</label>
+        <input id="emailCad" type="email" required>
+
+        <label for="senhaCad">Senha</label>
+        <input id="senhaCad" type="password" required>
+
+        <div class="form-actions" style="margin-top:8px">
+          <button class="btn btn-primary" type="submit">Cadastrar</button>
+          <a href="login.html" class="btn">Já tenho conta</a>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2025 Afloramor</p>
+    </div>
+  </footer>
+</body>
+</html>
 

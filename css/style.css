@@ -66,7 +66,7 @@ body {
   color: var(--text);
 
   /* Fundo com imagem */
-  background-image: url("Afloramor.png");
+  background-image: url("../assets/Afloramor.png");
   background-size: cover;      /* cobre toda a tela */
   background-position: center; /* centraliza a imagem */
   background-repeat: no-repeat;/* não repete */

@@ -1,0 +1,73 @@
+/* style.css */
+/* Global styles */
+:root{
+  --accent: #e91e63;
+  --accent-dark: #c2185b;
+  --bg: #fff6f9;
+  --text: #333;
+  --glass: rgba(255,255,255,0.85);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: 'Poppins', sans-serif;
+  background: var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+}
+.container{max-width:1100px;margin:0 auto;padding:0 20px}
+
+/* Header */
+.site-header{background:linear-gradient(90deg, rgba(233,30,99,0.95), rgba(194,24,91,0.95)); color:#fff}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+.brand .logo{font-size:22px;font-weight:700;letter-spacing:3px;color:#fff;text-decoration:none}
+.brand .tagline{font-size:13px;margin-top:2px;opacity:0.95}
+.main-nav a{color:#fff;text-decoration:none;margin-left:18px;font-weight:500}
+.btn{display:inline-block;padding:8px 14px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.18);color:#fff;text-decoration:none}
+.btn:hover{opacity:0.95}
+.btn-doar{background:rgba(255,255,255,0.15);border:none}
+.btn-primary{background:var(--accent);color:#fff;border:none;padding:12px 20px;border-radius:10px;text-decoration:none}
+.btn-secondary{background:transparent;color:var(--accent);border:2px solid var(--accent);padding:10px 18px;border-radius:10px;text-decoration:none}
+
+/* Hero */
+.hero{padding:60px 0;text-align:center}
+.hero h1{font-size:34px;margin-bottom:12px;color:#7b0a29}
+.hero p{max-width:720px;margin:0 auto 20px;font-size:18px;color:#4a2a33}
+.hero-actions{margin-top:18px;display:flex;gap:12px;justify-content:center}
+
+/* Features */
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;padding:40px 0}
+.feature{background:#fff;border-radius:12px;padding:20px;box-shadow:0 6px 18px rgba(0,0,0,0.06);text-align:center}
+.feature h3{color:var(--accent)}
+
+/* Footer */
+.site-footer{background:#f3d6df;padding:18px 0;margin-top:40px}
+.footer-inner{display:flex;flex-direction:column;align-items:center;gap:8px}
+.footer-inner .links a{margin:0 8px;color:#6a2840;text-decoration:none}
+.socials a{margin:0 6px;color:#6a2840;text-decoration:none}
+
+/* Forms and cards shared styles used by other pages */
+.card{background:#fff;border-radius:12px;padding:18px;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+form label{display:block;margin-bottom:8px;font-weight:600;color:#4a2a33}
+input[type="text"],input[type="email"],input[type="password"],select,textarea{
+  width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;margin-bottom:12px;font-size:15px
+}
+input::placeholder{color:#999}
+.form-actions{display:flex;gap:12px;flex-wrap:wrap}
+
+@media (max-width:720px){
+  .header-inner{flex-direction:column;gap:10px}
+  .main-nav{display:flex;flex-wrap:wrap;justify-content:center}
+}
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  color: var(--text);
+
+  /* Fundo com imagem */
+  background-image: url("Afloramor.png");
+  background-size: cover;      /* cobre toda a tela */
+  background-position: center; /* centraliza a imagem */
+  background-repeat: no-repeat;/* não repete */
+}

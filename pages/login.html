@@ -1,48 +1,114 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login — Afloramor</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Afloramor</title>
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" type="image/png" href="../assets/Afloramor.png">
+  <style>
+    body {
+      background-color: #fff8fa;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-box {
+      background-color: white;
+      padding: 40px 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 380px;
+      text-align: center;
+    }
+
+    .login-box h2 {
+      color: #e67e9c;
+      margin-bottom: 25px;
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-family: 'Poppins', sans-serif;
+      font-size: 15px;
+    }
+
+    button {
+      width: 100%;
+      background-color: #e67e9c;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 15px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #f4b6c2;
+    }
+
+    .error {
+      color: #e74c3c;
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .logo {
+      font-size: 32px;
+      color: #e67e9c;
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <div class="brand">
-        <a href="../index.html" class="logo">AFLORAMOR</a>
-      </div>
-      <nav class="main-nav">
-        <a href="doeagora.html" class="btn btn-doar">Doe Agora</a>
-        <a href="sobrenos.html">Sobre nós</a>
-        <a href="cadastro.html" class="btn">Cadastro</a>
-      </nav>
-    </div>
-  </header>
+  <div class="login-box">
+    <div class="logo">🌸</div>
+    <h2>Login Afloramor</h2>
+    <form id="loginForm">
+      <input type="text" id="usuario" placeholder="Usuário" required>
+      <input type="password" id="senha" placeholder="Senha" required>
+      <button type="submit">Entrar</button>
+      <p class="error" id="mensagemErro"></p>
+    </form>
+  </div>
 
-  <main class="container" style="display:flex;justify-content:center;align-items:center;padding:40px 0">
-    <div class="card" style="width:380px">
-      <h2 style="text-align:center;color:var(--accent);margin-top:0">Login</h2>
-      <form onsubmit="event.preventDefault();alert('Simulação: login ok')">
-        <label for="email">E-mail</label>
-        <input id="email" type="email" placeholder="seu@email.com" required>
-        <label for="senha">Senha</label>
-        <input id="senha" type="password" placeholder="••••••" required>
-        <div class="form-actions">
-          <button class="btn btn-primary" type="submit">Entrar</button>
-          <a href="cadastro.html" class="btn">Criar conta</a>
-        </div>
-        <p style="margin-top:10px;font-size:13px"><a href="#">Esqueci minha senha</a></p>
-      </form>
-    </div>
-  </main>
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+      event.preventDefault();
 
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <p>© 2025 Afloramor</p>
-    </div>
-  </footer>
+      const usuario = document.getElementById("usuario").value.trim();
+      const senha = document.getElementById("senha").value.trim();
+      const mensagemErro = document.getElementById("mensagemErro");
+
+      // Usuário global padrão
+      const usuarioPadrao = "f5";
+      const senhaPadrao = "12345";
+
+      if (usuario === usuarioPadrao && senha === senhaPadrao) {
+        mensagemErro.style.color = "#4CAF50";
+        mensagemErro.innerText = "Login realizado com sucesso!";
+        setTimeout(() => {
+          window.location.href = "home.html";
+        }, 1000);
+      } else {
+        mensagemErro.style.color = "#e74c3c";
+        mensagemErro.innerText = "Usuário ou senha incorretos!";
+      }
+    });
+  </script>
 </body>
 </html>
-

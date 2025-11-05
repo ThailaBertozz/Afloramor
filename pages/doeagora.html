@@ -1,94 +1,122 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Doe Agora — Afloramor</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doe Agora - Afloramor</title>
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="icon" type="image/png" href="../assets/Afloramor.png">
+  <style>
+    body {
+      background-color: #fff8fa;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .form-container {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #e67e9c;
+      margin-bottom: 20px;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 15px;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    button {
+      background-color: #e67e9c;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-weight: 500;
+    }
+
+    button:hover {
+      background-color: #f4b6c2;
+    }
+
+    .success {
+      color: #4CAF50;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <div class="brand">
-        <a href="../index.html" class="logo">AFLORAMOR</a>
-      </div>
-      <nav class="main-nav">
-        <a href="comodoar.html">Como doar?</a>
-        <a href="sobrenos.html">Sobre nós</a>
-        <a href="cadastro.html" class="btn">Cadastro</a>
-        <a href="login.html" class="btn">Login</a>
-      </nav>
-    </div>
-  </header>
+  <div class="form-container">
+    <h2>🌸 Doe Agora</h2>
+    <form id="donationForm">
+      <input type="text" id="nome" placeholder="Seu nome completo" required>
+      <input type="number" id="valor" placeholder="Valor da doação (R$)" required min="1">
+      <select id="metodo" required>
+        <option value="">Selecione o método de pagamento</option>
+        <option value="Pix">Pix</option>
+        <option value="Cartão">Cartão</option>
+        <option value="Boleto">Boleto</option>
+      </select>
+      <button type="submit">Confirmar Doação</button>
+      <p id="mensagem" class="success"></p>
+    </form>
+  </div>
 
-  <main class="container">
-    <section style="margin-top:28px">
-      <h2 style="color:var(--accent)">Doe Agora</h2>
-      <p>Escolha uma ONG, selecione o tipo de doação e confirme. Este formulário é um protótipo — em produção você vai conectar ao banco de dados.</p>
+  <script>
+    document.getElementById("donationForm").addEventListener("submit", function(event) {
+      event.preventDefault();
 
-      <div style="display:grid;grid-template-columns:1fr 320px;gap:18px;margin-top:18px">
-        <div>
-          <div class="card">
-            <h3>1) Selecione a ONG</h3>
-            <div class="ong-list">
-              <label><input type="radio" name="ong" value="esperanca" checked> ONG Esperança — Ajuda famílias</label><br>
-              <label><input type="radio" name="ong" value="amigoanimal"> ONG Amigo Animal — Animais</label><br>
-              <label><input type="radio" name="ong" value="futuro"> ONG Futuro Melhor — Crianças</label>
-            </div>
-          </div>
+      const nome = document.getElementById("nome").value.trim();
+      const valor = parseFloat(document.getElementById("valor").value);
+      const metodo = document.getElementById("metodo").value;
+      const data = new Date();
 
-          <div class="card" style="margin-top:14px">
-            <h3>2) Tipo de Doação</h3>
-            <select id="tipo-doacao">
-              <option value="">-- selecione --</option>
-              <option value="alimentos">Alimentos</option>
-              <option value="roupas">Roupas</option>
-              <option value="higiene">Higiene</option>
-              <option value="brinquedos">Brinquedos</option>
-              <option value="dinheiro">Dinheiro</option>
-            </select>
-            <label for="quantidade">Quantidade / Valor</label>
-            <input type="text" id="quantidade" placeholder="Ex: 2 cestas ou R$ 50">
-          </div>
+      if (!nome || !valor || !metodo) {
+        alert("Por favor, preencha todos os campos!");
+        return;
+      }
 
-          <div class="card" style="margin-top:14px">
-            <h3>3) Observações</h3>
-            <textarea rows="4" placeholder="Horário de entrega, restrições, etc."></textarea>
-          </div>
-        </div>
+      const mesAtual = data.toLocaleString("pt-BR", { month: "short" }).replace('.', '');
+      const novaDoacao = {
+        nome,
+        valor,
+        metodo,
+        data: data.toLocaleDateString("pt-BR"),
+        mes: mesAtual.charAt(0).toUpperCase() + mesAtual.slice(1)
+      };
 
-        <aside>
-          <div class="card">
-            <h3>Seus dados</h3>
-            <label for="nome">Nome</label>
-            <input id="nome" type="text" placeholder="Seu nome">
-            <label for="email">E-mail</label>
-            <input id="email" type="email" placeholder="seu@email.com">
-            <div class="form-actions">
-              <button class="btn btn-primary" id="confirmar">Confirmar Doação</button>
-            </div>
-          </div>
-        </aside>
-      </div>
+      const doacoesExistentes = JSON.parse(localStorage.getItem("doacoes")) || [];
+      doacoesExistentes.push(novaDoacao);
+      localStorage.setItem("doacoes", JSON.stringify(doacoesExistentes));
 
-      <script>
-        // protótipo: evita envio real e mostra confirmação
-        document.getElementById('confirmar').addEventListener('click', function(e){
-          e.preventDefault();
-          alert('Obrigado! Sua doação foi registrada (simulação).');
-        });
-      </script>
+      document.getElementById("mensagem").innerText = "Doação registrada com sucesso! 💖";
 
-    </section>
-  </main>
+      // Limpa o formulário
+      document.getElementById("donationForm").reset();
 
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <div class="links"><a href="sobrenos.html">Sobre nós</a> · <a href="#">Contato</a></div>
-      <p>© 2025 Afloramor</p>
-    </div>
-  </footer>
+      // Redireciona para o painel após 2 segundos
+      setTimeout(() => {
+        window.location.href = "home.html";
+      }, 1500);
+    });
+  </script>
 </body>
 </html>
-

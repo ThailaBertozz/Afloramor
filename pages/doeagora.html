@@ -1,1 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doe Agora — Afloramor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <a href="index.html" class="logo">AFLORAMOR</a>
+      </div>
+      <nav class="main-nav">
+        <a href="como-doar.html">Como doar?</a>
+        <a href="sobre.html">Sobre nós</a>
+        <a href="cadastro.html" class="btn">Cadastro</a>
+        <a href="login.html" class="btn">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section style="margin-top:28px">
+      <h2 style="color:var(--accent)">Doe Agora</h2>
+      <p>Escolha uma ONG, selecione o tipo de doação e confirme. Este formulário é um protótipo — em produção você vai conectar ao banco de dados.</p>
+
+      <div style="display:grid;grid-template-columns:1fr 320px;gap:18px;margin-top:18px">
+        <div>
+          <div class="card">
+            <h3>1) Selecione a ONG</h3>
+            <div class="ong-list">
+              <label><input type="radio" name="ong" value="esperanca" checked> ONG Esperança — Ajuda famílias</label><br>
+              <label><input type="radio" name="ong" value="amigoanimal"> ONG Amigo Animal — Animais</label><br>
+              <label><input type="radio" name="ong" value="futuro"> ONG Futuro Melhor — Crianças</label>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:14px">
+            <h3>2) Tipo de Doação</h3>
+            <select id="tipo-doacao">
+              <option value="">-- selecione --</option>
+              <option value="alimentos">Alimentos</option>
+              <option value="roupas">Roupas</option>
+              <option value="higiene">Higiene</option>
+              <option value="brinquedos">Brinquedos</option>
+              <option value="dinheiro">Dinheiro</option>
+            </select>
+            <label for="quantidade">Quantidade / Valor</label>
+            <input type="text" id="quantidade" placeholder="Ex: 2 cestas ou R$ 50">
+          </div>
+
+          <div class="card" style="margin-top:14px">
+            <h3>3) Observações</h3>
+            <textarea rows="4" placeholder="Horário de entrega, restrições, etc."></textarea>
+          </div>
+        </div>
+
+        <aside>
+          <div class="card">
+            <h3>Seus dados</h3>
+            <label for="nome">Nome</label>
+            <input id="nome" type="text" placeholder="Seu nome">
+            <label for="email">E-mail</label>
+            <input id="email" type="email" placeholder="seu@email.com">
+            <div class="form-actions">
+              <button class="btn btn-primary" id="confirmar">Confirmar Doação</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <script>
+        // protótipo: evita envio real e mostra confirmação
+        document.getElementById('confirmar').addEventListener('click', function(e){
+          e.preventDefault();
+          alert('Obrigado! Sua doação foi registrada (simulação).');
+        });
+      </script>
+
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="links"><a href="sobre.html">Sobre nós</a> · <a href="#">Contato</a></div>
+      <p>© 2025 Afloramor</p>
+    </div>
+  </footer>
+</body>
+</html>
 

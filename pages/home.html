@@ -205,21 +205,26 @@
       <h2>Painel Gerencial</h2>
       <div class="filters">
         <input type="text" id="searchInput" placeholder="Buscar doador...">
-        <select id="monthFilter">
-          <option value="">Todos os meses</option>
-          <option value="Jan">Janeiro</option>
-          <option value="Fev">Fevereiro</option>
-          <option value="Mar">Março</option>
-          <option value="Abr">Abril</option>
-          <option value="Mai">Maio</option>
-          <option value="Jun">Junho</option>
-          <option value="Jul">Julho</option>
-          <option value="Ago">Agosto</option>
-          <option value="Set">Setembro</option>
-          <option value="Out">Outubro</option>
-          <option value="Nov">Novembro</option>
-          <option value="Dez">Dezembro</option>
-        </select>
+        <div style="display:flex;gap:10px;align-items:center">
+          <select id="ongFilter">
+            <option value="">Todas as ONGs</option>
+          </select>
+          <select id="monthFilter">
+            <option value="">Todos os meses</option>
+            <option value="Jan">Janeiro</option>
+            <option value="Fev">Fevereiro</option>
+            <option value="Mar">Março</option>
+            <option value="Abr">Abril</option>
+            <option value="Mai">Maio</option>
+            <option value="Jun">Junho</option>
+            <option value="Jul">Julho</option>
+            <option value="Ago">Agosto</option>
+            <option value="Set">Setembro</option>
+            <option value="Out">Outubro</option>
+            <option value="Nov">Novembro</option>
+            <option value="Dez">Dezembro</option>
+          </select>
+        </div>
       </div>
 
       <div class="dashboard-cards">
@@ -232,11 +237,12 @@
       <div class="chart-grid">
         <div class="chart-container"><h3>Doações por Mês</h3><canvas id="donationChart"></canvas></div>
         <div class="chart-container"><h3>Distribuição de Métodos</h3><canvas id="methodChart"></canvas></div>
+        <div class="chart-container"><h3>Doações por ONG</h3><canvas id="ongChart"></canvas></div>
       </div>
 
       <h3>Últimas Doações</h3>
       <table>
-        <thead><tr><th>Nome</th><th>Valor</th><th>Data</th><th>Método</th></tr></thead>
+        <thead><tr><th>Nome</th><th>Valor</th><th>Data</th><th>Método</th><th>ONG</th></tr></thead>
         <tbody id="donationTable"></tbody>
       </table>
     </div>
@@ -245,58 +251,172 @@
   <script>
     lucide.createIcons();
 
+    // -- MOCK: doações de exemplo (contêm ONG)
     const mockadas = [
-      { nome: "Maria Silva", valor: 120, data: "03/11/2025", metodo: "Pix", mes: "Nov" },
-      { nome: "João Pedro", valor: 250, data: "02/11/2025", metodo: "Cartão", mes: "Nov" },
-      { nome: "Ana Souza", valor: 90, data: "01/11/2025", metodo: "Pix", mes: "Nov" }
+      { nome: "Maria Silva", valor: 120, data: "03/11/2025", metodo: "Pix", mes: "Nov", ong: "Ampara Animal" },
+      { nome: "João Pedro", valor: 250, data: "02/11/2025", metodo: "Cartão", mes: "Nov", ong: "Instituto Luisa Mell" },
+      { nome: "Ana Souza", valor: 90, data: "01/11/2025", metodo: "Pix", mes: "Nov", ong: "ONG Patinhas Felizes" },
+      { nome: "Carlos Lima", valor: 300, data: "15/10/2025", metodo: "Boleto", mes: "Out", ong: "Ampara Animal" },
+      { nome: "Beatriz N.", valor: 50, data: "10/09/2025", metodo: "Pix", mes: "Set", ong: "Instituto Luisa Mell" },
+      { nome: "Rafael T.", valor: 400, data: "05/08/2025", metodo: "Cartão", mes: "Ago", ong: "ONG Patinhas Felizes" }
     ];
 
+    // lê do localStorage (se tiver) — pode ter campo ong se veio da página de doação
     const doacoesSalvas = JSON.parse(localStorage.getItem('doacoes')) || [];
-    const donations = [...mockadas, ...doacoesSalvas];
+    // padroniza estrutura das doações salvas (garantir campos)
+    const normalizedSaved = doacoesSalvas.map(d => ({
+      nome: d.nome || 'Anônimo',
+      valor: Number(d.valor) || 0,
+      data: d.data || new Date().toLocaleDateString('pt-BR'),
+      metodo: d.metodo || 'Pix',
+      mes: d.mes || (new Date(d.data ? d.data.split('/').reverse().join('-') : undefined).toLocaleString('pt-BR', { month: 'short' }).replace('.', '')),
+      ong: d.ong || 'Outros'
+    }));
 
+    let donations = [...mockadas, ...normalizedSaved];
+
+    // atualiza lista de ONGs no filtro dinamicamente
+    function populateOngFilter() {
+      const ongSet = new Set(donations.map(d => d.ong || 'Outros'));
+      const ongFilter = document.getElementById('ongFilter');
+      ongFilter.innerHTML = '<option value=\"\">Todas as ONGs</option>';
+      Array.from(ongSet).forEach(ong => {
+        const opt = document.createElement('option');
+        opt.value = ong;
+        opt.innerText = ong;
+        ongFilter.appendChild(opt);
+      });
+    }
+
+    // renderiza a tabela com filtros de busca, mês e ONG
     function renderTable() {
       const tableBody = document.getElementById('donationTable');
       const searchInput = document.getElementById('searchInput');
       const monthFilter = document.getElementById('monthFilter');
+      const ongFilter = document.getElementById('ongFilter');
       const term = searchInput.value.toLowerCase();
       const month = monthFilter.value;
+      const ongSel = ongFilter.value;
       tableBody.innerHTML = '';
 
       let total = 0;
-      donations.filter(d => d.nome.toLowerCase().includes(term) && (month === '' || d.mes === month))
+      donations
+        .filter(d => d.nome.toLowerCase().includes(term))
+        .filter(d => month === '' || d.mes === month)
+        .filter(d => ongSel === '' || d.ong === ongSel)
         .forEach(d => {
           const row = document.createElement('tr');
-          row.innerHTML = `<td>${d.nome}</td><td>R$ ${d.valor.toFixed(2)}</td><td>${d.data}</td><td>${d.metodo}</td>`;
+          row.innerHTML = `<td>${d.nome}</td><td>R$ ${Number(d.valor).toFixed(2)}</td><td>${d.data}</td><td>${d.metodo}</td><td>${d.ong || '—'}</td>`;
           tableBody.appendChild(row);
-          total += d.valor;
+          total += Number(d.valor);
         });
 
       document.getElementById('totalDoacoes').textContent = 'R$ ' + total.toFixed(2);
     }
 
-    document.getElementById('searchInput').addEventListener('input', renderTable);
-    document.getElementById('monthFilter').addEventListener('change', renderTable);
+    document.getElementById('searchInput').addEventListener('input', () => { renderTable(); updateCharts(); });
+    document.getElementById('monthFilter').addEventListener('change', () => { renderTable(); updateCharts(); });
+    document.getElementById('ongFilter').addEventListener('change', () => { renderTable(); updateCharts(); });
 
+    populateOngFilter();
     renderTable();
 
-    new Chart(document.getElementById('donationChart'), {
+    // --- Charts dynamic generation based on `donations` (considerando filtros atuais) ---
+    function getFilteredDonationsForCharts() {
+      const month = document.getElementById('monthFilter').value;
+      const ongSel = document.getElementById('ongFilter').value;
+      const term = document.getElementById('searchInput').value.toLowerCase();
+      return donations.filter(d => d.nome.toLowerCase().includes(term))
+                      .filter(d => month === '' || d.mes === month)
+                      .filter(d => ongSel === '' || d.ong === ongSel);
+    }
+
+    // Monta array de meses (abreviados) na ordem Jan..Dez
+    const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+    function computeMonthlyTotals(list) {
+      const totals = months.map(m => 0);
+      list.forEach(d => {
+        const idx = months.indexOf(d.mes);
+        if (idx >= 0) totals[idx] += Number(d.valor);
+      });
+      return totals;
+    }
+
+    function computeMethodCounts(list) {
+      const counts = { Pix: 0, Cartão: 0, Boleto: 0, Outros: 0 };
+      list.forEach(d => {
+        const m = d.metodo || 'Outros';
+        if (counts[m] !== undefined) counts[m]++; else counts.Outros++;
+      });
+      return counts;
+    }
+
+    function computeOngTotals(list) {
+      const map = {};
+      list.forEach(d => {
+        const o = d.ong || 'Outros';
+        map[o] = (map[o] || 0) + Number(d.valor);
+      });
+      return map;
+    }
+
+    // inicializa charts vazios
+    const donationChartCtx = document.getElementById('donationChart').getContext('2d');
+    const methodChartCtx = document.getElementById('methodChart').getContext('2d');
+    const ongChartCtx = document.getElementById('ongChart').getContext('2d');
+
+    let donationChart = new Chart(donationChartCtx, {
       type: 'bar',
       data: {
-        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-        datasets: [{ label: 'Doações (R$)', data: [800, 950, 1200, 1100, 1300, 1000, 900, 1250, 1500, 1600, 900, 800], backgroundColor: '#e67e9c' }]
+        labels: months,
+        datasets: [{ label: 'Doações (R$)', data: computeMonthlyTotals(donations), backgroundColor: '#e67e9c' }]
       },
-      options: { scales: { y: { beginAtZero: true } } }
+      options: { scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
     });
 
-    const methodData = { Pix: donations.filter(d => d.metodo === 'Pix').length, Cartão: donations.filter(d => d.metodo === 'Cartão').length, Boleto: donations.filter(d => d.metodo === 'Boleto').length };
-    new Chart(document.getElementById('methodChart'), {
+    let methodChart = new Chart(methodChartCtx, {
       type: 'doughnut',
       data: {
-        labels: Object.keys(methodData),
-        datasets: [{ data: Object.values(methodData), backgroundColor: ['#e67e9c', '#f4b6c2', '#ffe3eb'] }]
+        labels: Object.keys(computeMethodCounts(donations)),
+        datasets: [{ data: Object.values(computeMethodCounts(donations)), backgroundColor: ['#e67e9c', '#f4b6c2', '#ffe3eb', '#f7e7ea'] }]
       },
       options: { plugins: { legend: { position: 'bottom' } } }
     });
+
+    function createOngChart(map) {
+      const labels = Object.keys(map);
+      const data = Object.values(map);
+      return new Chart(ongChartCtx, {
+        type: 'bar',
+        data: { labels, datasets: [{ label: 'Total (R$)', data, backgroundColor: '#e67e9c' }] },
+        options: { indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true } } }
+      });
+    }
+
+    let ongChart = createOngChart(computeOngTotals(donations));
+
+    // atualiza charts com base nos filtros
+    function updateCharts() {
+      const filtered = getFilteredDonationsForCharts();
+      // donationChart
+      const monthly = computeMonthlyTotals(filtered);
+      donationChart.data.datasets[0].data = monthly;
+      donationChart.update();
+
+      // methodChart
+      const methodCounts = computeMethodCounts(filtered);
+      methodChart.data.labels = Object.keys(methodCounts);
+      methodChart.data.datasets[0].data = Object.values(methodCounts);
+      methodChart.update();
+
+      // ongChart: destrói e recria (para atualizar labels dinamicamente)
+      ongChart.destroy();
+      ongChart = createOngChart(computeOngTotals(filtered));
+    }
+
+    // atualiza quando inicia
+    updateCharts();
 
     function logout() {
       alert('Logout realizado com sucesso!');

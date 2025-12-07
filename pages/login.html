@@ -4,16 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - Afloramor</title>
+
   <link rel="stylesheet" href="../css/style.css">
   <link rel="icon" type="image/png" href="../assets/Afloramor.png">
+
   <style>
     body {
       background-color: #fff8fa;
       font-family: 'Poppins', sans-serif;
       margin: 0;
-      height: 100vh;
+      padding-top: 80px; /* espaço para o header */
       display: flex;
-      align-items: center;
       justify-content: center;
     }
 
@@ -66,18 +67,30 @@
       font-size: 14px;
       font-weight: 500;
     }
-
-    .logo {
-      font-size: 32px;
-      color: #e67e9c;
-      margin-bottom: 10px;
-    }
   </style>
 </head>
+
 <body>
+
+  <!-- ✅ HEADER ADICIONADO -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <a href="../index.html" class="logo">AFLORAMOR</a>
+      </div>
+      <nav class="main-nav">
+        <a href="doeagora.html" class="btn btn-doar">Doe Agora</a>
+        <a href="comodoar.html">Como doar?</a>
+        <a href="cadastro.html" class="btn">Cadastro</a>
+        <a href="login.html" class="btn">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Área central -->
   <div class="login-box">
-    <div class="logo">🌸</div>
     <h2>Login Afloramor</h2>
+
     <form id="loginForm">
       <input type="text" id="usuario" placeholder="Usuário" required>
       <input type="password" id="senha" placeholder="Senha" required>
@@ -94,7 +107,6 @@
       const senha = document.getElementById("senha").value.trim();
       const mensagemErro = document.getElementById("mensagemErro");
 
-      // Usuário global padrão
       const usuarioPadrao = "f5";
       const senhaPadrao = "12345";
 
@@ -110,5 +122,6 @@
       }
     });
   </script>
+
 </body>
 </html>

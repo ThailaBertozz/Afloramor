@@ -69,12 +69,22 @@
     <form id="donationForm">
       <input type="text" id="nome" placeholder="Seu nome completo" required>
       <input type="number" id="valor" placeholder="Valor da doação (R$)" required min="1">
+
+      <!-- NOVO: Seleção da ONG -->
+      <select id="ong" required>
+        <option value="">Selecione a ONG</option>
+        <option value="Ampara Animal">Ampara Animal</option>
+        <option value="Instituto Luisa Mell">Instituto Luisa Mell</option>
+        <option value="ONG Patinhas Felizes">ONG Patinhas Felizes</option>
+      </select>
+
       <select id="metodo" required>
         <option value="">Selecione o método de pagamento</option>
         <option value="Pix">Pix</option>
         <option value="Cartão">Cartão</option>
         <option value="Boleto">Boleto</option>
       </select>
+
       <button type="submit">Confirmar Doação</button>
       <p id="mensagem" class="success"></p>
     </form>
@@ -87,18 +97,21 @@
       const nome = document.getElementById("nome").value.trim();
       const valor = parseFloat(document.getElementById("valor").value);
       const metodo = document.getElementById("metodo").value;
+      const ong = document.getElementById("ong").value; // <-- Nova informação
       const data = new Date();
 
-      if (!nome || !valor || !metodo) {
+      if (!nome || !valor || !metodo || !ong) {
         alert("Por favor, preencha todos os campos!");
         return;
       }
 
       const mesAtual = data.toLocaleString("pt-BR", { month: "short" }).replace('.', '');
+      
       const novaDoacao = {
         nome,
         valor,
         metodo,
+        ong, // <-- salva a ONG escolhida
         data: data.toLocaleDateString("pt-BR"),
         mes: mesAtual.charAt(0).toUpperCase() + mesAtual.slice(1)
       };
@@ -109,10 +122,8 @@
 
       document.getElementById("mensagem").innerText = "Doação registrada com sucesso! 💖";
 
-      // Limpa o formulário
       document.getElementById("donationForm").reset();
 
-      // Redireciona para o painel após 2 segundos
       setTimeout(() => {
         window.location.href = "home.html";
       }, 1500);
